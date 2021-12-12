@@ -58,7 +58,7 @@ class Framer:
             output = np.copy(self.__result)
             for i in range(3):
                 output[:, :, i] = output[:, :, i] * mask
-            output = cv2.convertScaleAbs(output, alpha=3.0, beta=10)
+            output = cv2.convertScaleAbs(output, alpha=3.5, beta=5)
             return output
         else:
             return 0
