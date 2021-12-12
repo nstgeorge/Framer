@@ -12,6 +12,7 @@ class Framer:
         self.__frame_count = self.__get_frame_count()
         self.__x = int(dim[0]) if int(dim[0]) != 0 else self.__frame_count
         self.__y = int(dim[1]) if int(dim[1]) != 0 else int(self.__frame_count / 5)
+        self.__result = False
 
         self.__capture = cv2.VideoCapture(path)
 
@@ -47,6 +48,20 @@ class Framer:
         self.__current_frame += 1
         return self.__capture.read()
 
+    def apply_vignette(self):
+        x_kernel = np.ones((self.__x, 1))
+        y_modifier = cv2.getGaussianKernel(self.__y, self.__y / 4)
+        kernel = y_modifier * x_kernel.T
+        mask = 255 * kernel / np.linalg.norm(kernel)
+        if self.__result is not False:
+            output = np.copy(self.__result)
+            for i in range(3):
+                output[:, :, i] = output[:, :, i] * mask
+            output = cv2.convertScaleAbs(output, alpha=3.0, beta=10)
+            return output
+        else:
+            return 0
+
     def generate(self):
         """Generate the image."""
         print("Beginning generation on {} ({} frames)...".format(self.__path, self.__frame_count))
@@ -60,7 +75,8 @@ class Framer:
 
         # Make the strip horizontal, then resize to the user's expected size
         mean_colors = cv2.rotate(mean_colors, cv2.ROTATE_90_COUNTERCLOCKWISE)
-        return cv2.resize(mean_colors, (self.__x, self.__y))
+        self.__result = cv2.resize(mean_colors, (self.__x, self.__y))
+        return self.__result
 
 
 if __name__ == "__main__":
@@ -70,11 +86,14 @@ if __name__ == "__main__":
     parser.add_argument("size", help="Dimensions of the output file, XxY (like 2000x400). "
                                      "If the X value is 0, it will automatically be 1 pixel per frame. "
                                      "If Y is also 0, it will default to a 5:1 aspect ratio.")
+    parser.add_argument("--vignette", action="store_true", help="Applies a vignette filter to the strip.")
 
     args = parser.parse_args()
 
     framer = Framer(args.path, args.output, args.size.split("x"))
     result = framer.generate()
+    if args.vignette:
+        result = framer.apply_vignette()
 
     if cv2.imwrite(args.output, result):
         print("Saved to {}".format(args.output))
