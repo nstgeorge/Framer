@@ -49,9 +49,10 @@ class Framer:
         return self.__capture.read()
 
     def apply_vignette(self):
-        x_kernel = np.ones((self.__x, 1))
-        y_modifier = cv2.getGaussianKernel(self.__y, self.__y / 4)
-        kernel = y_modifier * x_kernel.T
+        """Apply a vignette filter to the image result. Returns 0 if an image hasn't been generated yet."""
+        x_modifier = np.ones((self.__x, 1))
+        y_kernel = cv2.getGaussianKernel(self.__y, self.__y / 4)
+        kernel = y_kernel * x_modifier.T
         mask = 255 * kernel / np.linalg.norm(kernel)
         if self.__result is not False:
             output = np.copy(self.__result)
