@@ -67,7 +67,7 @@ class Framer:
             return 0
 
     def generate(self, st=False):
-        progress_func = stqdm if not st else tqdm
+        progress_func = stqdm if st else tqdm
         """Generate the image."""
         print("Beginning generation on {} ({} frames)...".format(self.__path, self.__frame_count))
         mean_colors = np.empty((self.__frame_count, 1, 3))
@@ -80,7 +80,6 @@ class Framer:
 
         # Make the strip horizontal, then resize to the user's expected size
         mean_colors = cv2.rotate(mean_colors, cv2.ROTATE_90_COUNTERCLOCKWISE)
-        print(self.__x, self.__y)
         self.__result = cv2.resize(mean_colors, (self.__x, self.__y))
         return self.__result
 
