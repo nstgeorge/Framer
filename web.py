@@ -48,9 +48,9 @@ if __name__ == "__main__":
             result = generate(framer)
             result_vignette = get_vignette(framer)
             status.markdown("Done!")
-            st.image(result_vignette, caption="Your completed image")
             tmp_result = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
             cv2.imwrite(tmp_result.name, result_vignette)
+            st.image(tmp_result.read(), caption="Your completed image")
             st.download_button("Download", tmp_result.read(), file_name="framer_strip.png", mime="image/png")
 
 
