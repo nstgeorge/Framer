@@ -2,16 +2,16 @@ import argparse
 import cv2
 import numpy as np
 from tqdm import tqdm
+from stqdm import stqdm
 
 
 class Framer:
-    def __init__(self, path, output, dim):
+    def __init__(self, path, dim):
         self.__path = path
-        self.__output = output
         self.__current_frame = 0
         self.__frame_count = self.__get_frame_count()
         self.__x = int(dim[0]) if int(dim[0]) != 0 else self.__frame_count
-        self.__y = int(dim[1]) if int(dim[1]) != 0 else int(self.__frame_count / 5)
+        self.__y = int(dim[1]) if int(dim[1]) != 0 else int(self.__x / 5)
         self.__result = False
 
         self.__capture = cv2.VideoCapture(path)
@@ -48,6 +48,9 @@ class Framer:
         self.__current_frame += 1
         return self.__capture.read()
 
+    def get_path(self):
+        return self.__path
+
     def apply_vignette(self):
         """Apply a vignette filter to the image result. Returns 0 if an image hasn't been generated yet."""
         x_modifier = np.ones((self.__x, 1))
@@ -63,11 +66,12 @@ class Framer:
         else:
             return 0
 
-    def generate(self):
+    def generate(self, st=False):
+        progress_func = stqdm if not st else tqdm
         """Generate the image."""
         print("Beginning generation on {} ({} frames)...".format(self.__path, self.__frame_count))
         mean_colors = np.empty((self.__frame_count, 1, 3))
-        for i in tqdm(range(self.__frame_count)):
+        for i in progress_func(range(self.__frame_count)):
             success, frame = self.__read_next_frame()
             if not success:
                 print("Failed to read frame {}.".format(i))
@@ -76,6 +80,7 @@ class Framer:
 
         # Make the strip horizontal, then resize to the user's expected size
         mean_colors = cv2.rotate(mean_colors, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        print(self.__x, self.__y)
         self.__result = cv2.resize(mean_colors, (self.__x, self.__y))
         return self.__result
 
@@ -91,7 +96,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    framer = Framer(args.path, args.output, args.size.split("x"))
+    framer = Framer(args.path, args.size.split("x"))
     result = framer.generate()
     if args.vignette:
         result = framer.apply_vignette()
