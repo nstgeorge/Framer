@@ -27,7 +27,7 @@ def init_framer():
 
 
 if __name__ == "__main__":
-    st.header("Framer")
+    st.image("docs/banner.png")
     st.markdown("Generate a strip of colors based on the average color of each frame in a video.")
     st.markdown("**File**")
     input_file = st.file_uploader("Upload the video file that generates the color strip.", type=["mp4", "mkv", "mov"])
