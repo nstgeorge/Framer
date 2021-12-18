@@ -4,13 +4,15 @@ import numpy as np
 from tqdm import tqdm
 from stqdm import stqdm
 
+MAX_DEFAULT_X = 2000
+
 
 class Framer:
     def __init__(self, path, dim):
         self.__path = path
         self.__current_frame = 0
         self.__frame_count = self.__get_frame_count()
-        self.__x = int(dim[0]) if int(dim[0]) != 0 else self.__frame_count
+        self.__x = int(dim[0]) if int(dim[0]) != 0 else min(self.__frame_count, MAX_DEFAULT_X)
         self.__y = int(dim[1]) if int(dim[1]) != 0 else int(self.__x / 5)
         self.__result = False
 
@@ -49,6 +51,7 @@ class Framer:
         return self.__capture.read()
 
     def get_path(self):
+        """Get the active path."""
         return self.__path
 
     def apply_vignette(self):
@@ -67,8 +70,8 @@ class Framer:
             return 0
 
     def generate(self, st=False):
-        progress_func = stqdm if st else tqdm
         """Generate the image."""
+        progress_func = stqdm if st else tqdm
         print("Beginning generation on {} ({} frames)...".format(self.__path, self.__frame_count))
         mean_colors = np.empty((self.__frame_count, 1, 3))
         for i in progress_func(range(self.__frame_count)):
@@ -88,9 +91,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a strip of colors for each frame in a video file.")
     parser.add_argument("path", help="The path to the video file.")
     parser.add_argument("output", help="Output file name.")
-    parser.add_argument("size", help="Dimensions of the output file, XxY (like 2000x400). "
-                                     "If the X value is 0, it will automatically be 1 pixel per frame. "
-                                     "If Y is also 0, it will default to a 5:1 aspect ratio.")
+    parser.add_argument("size", default="0x0", help="Dimensions of the output file, XxY (like 2000x400). "
+                                                    "If the X value is 0, it will automatically be 1 pixel per frame "
+                                                    "with a maximum of 2000. If Y is also 0 or no size is defined, "
+                                                    "it will default to a 5:1 aspect ratio.", nargs="?")
     parser.add_argument("--vignette", action="store_true", help="Applies a vignette filter to the strip.")
 
     args = parser.parse_args()
@@ -104,4 +108,3 @@ if __name__ == "__main__":
         print("Saved to {}".format(args.output))
     else:
         print("File not saved. Check permissions for the location you're trying to save to.")
-
