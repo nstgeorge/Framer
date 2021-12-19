@@ -27,6 +27,16 @@ def init_framer():
 
 
 if __name__ == "__main__":
+    st.set_page_config(page_title="Framer - Generate movie barcodes on the web!", page_icon="🎥", menu_items={
+        "Report a Bug": "https://github.com/nstgeorge/Framer/issues",
+        "About": """
+                 Create your own movie barcodes right from the web! If you want to get more info about this app,
+                 see the [GitHub repository](https://github.com/nstgeorge/Framer).
+                 
+                 Fun fact: This website was created so I could make my sister's Christmas present, where I printed out
+                 and framed the barcodes for some of her favorite movies!
+                 """
+    })
     st.image("docs/banner.png")
     st.markdown("Generate a strip of colors based on the average color of each frame in a video.")
     st.markdown("**File**")
