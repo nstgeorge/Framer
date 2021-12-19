@@ -5,8 +5,8 @@ from framer import Framer
 
 
 def hash_framer(f):
-    """Not a real hash function, but good enough for us."""
-    return f.get_path()
+    """Get the hash of the video."""
+    return hash(f)
 
 
 @st.cache(hash_funcs={Framer: hash_framer}, suppress_st_warning=True)
@@ -19,7 +19,7 @@ def get_vignette(framer):
     return framer.apply_vignette()
 
 
-@st.cache(allow_output_mutation=True)
+# @st.cache(allow_output_mutation=True)
 def init_framer():
     temp = tempfile.NamedTemporaryFile(delete=False)
     temp.write(input_file.read())
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         """)
 
     st.markdown("**Dimensions**: Input the desired dimensions of the strip. If you leave these at 0, "
-                "there will be one pixel per frame horizontally and 1/5 of that number vertically, with a maximum of 2000.")
+                "we'll pick good dimensions for you.")
 
     col1, col2 = st.columns(2)
     x = col1.number_input("X", value=0)
