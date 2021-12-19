@@ -62,18 +62,15 @@ if __name__ == "__main__":
     y = col2.number_input("Y", value=0)
 
     if input_file is not None:
-        if st.button("Start"):
-            status = st.empty()
-            status.markdown("Starting...")
-            framer = init_framer()
-            status.markdown("Working...")
-            progress = st.empty()
-            result = generate(framer)
-            result_vignette = get_vignette(framer)
-            status.markdown("Done!")
-            tmp_result = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
-            cv2.imwrite(tmp_result.name, result_vignette)
-            st.image(tmp_result.read(), caption="Your completed image")
-            st.download_button("Download", tmp_result.read(), file_name="framer_strip.png", mime="image/png")
-
-
+        status = st.empty()
+        status.markdown("Starting...")
+        framer = init_framer()
+        status.markdown("Working...")
+        progress = st.empty()
+        result = generate(framer)
+        result_vignette = get_vignette(framer)
+        status.markdown("Done!")
+        tmp_result = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+        cv2.imwrite(tmp_result.name, result_vignette)
+        st.image(tmp_result.read(), caption="Your completed image")
+        st.download_button("Download", tmp_result.read(), file_name="framer_strip.png", mime="image/png")
