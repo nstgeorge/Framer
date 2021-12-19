@@ -1,4 +1,5 @@
 import argparse
+import time
 import cv2
 import numpy as np
 from tqdm import tqdm
@@ -72,6 +73,7 @@ class Framer:
     def generate(self, st=False):
         """Generate the image."""
         progress_func = stqdm if st else tqdm
+        start = time.time()
         print("Beginning generation on {} ({} frames)...".format(self.__path, self.__frame_count))
         mean_colors = np.empty((self.__frame_count, 1, 3))
         for i in progress_func(range(self.__frame_count)):
@@ -84,6 +86,7 @@ class Framer:
         # Make the strip horizontal, then resize to the user's expected size
         mean_colors = cv2.rotate(mean_colors, cv2.ROTATE_90_COUNTERCLOCKWISE)
         self.__result = cv2.resize(mean_colors, (self.__x, self.__y))
+        print("{} complete {}s!".format(self.__path, time.time() - start))
         return self.__result
 
 
