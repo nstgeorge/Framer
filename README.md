@@ -1,5 +1,5 @@
 ![Framer banner](docs/banner.png)
-Create a strip of color representing each frame in a video file.
+Create a strip of color representing each frame in a video file, often called a "movie barcode."
 
 [Try it out here!](https://share.streamlit.io/nstgeorge/framer/main/web.py)
 
