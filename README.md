@@ -6,7 +6,7 @@ Create a strip of color representing each frame in a video file, often called a 
 ## Setup
 
 If you're making a strip using a small file (<500 MB), you should try the 
-[web version](https://share.streamlit.io/nstgeorge/framer/main/web.py). This should be fine for individual scenes and some short films, or movies with reduced resolution. Framer can work with any resolution, so you can massively improve compute and upload time by reducing the resolution by 4-8x. I generated a strip for Blade Runner 2049 using a 240x100 file, which was small enough to easily be uploaded to the web UI. To generate a tiny video file, you can use a tool like [Handbrake](https://handbrake.fr).
+[web version](https://share.streamlit.io/nstgeorge/framer/main/web.py). This should be fine for individual scenes and some short films, or movies with reduced resolution. Framer can work with any resolution, so you can massively improve compute and upload time by reducing the resolution by 4-8x. I generated a strip for Blade Runner 2049 using a 240x100 file, which was small enough to easily be uploaded to the web UI. To create a tiny video file, you can use a tool like [Handbrake](https://handbrake.fr).
 
 ### Local installation
 
@@ -66,13 +66,13 @@ You can access this using `python framer.py -h`. I'll try to keep this updated, 
 
 If I have a video file called `video.mp4` and I want an output called `video_strip.png` with the default size and a vignette effect, I can use this command:
 ```shell
-python framer.py output.mp4 video_strip.png --vignette
+python framer.py video.mp4 video_strip.png --vignette
 ```
 
 If I want the same output but 3000px long, I can use this:
 
 ```shell
-python framer.py output.mp4 video_strip.png 3000x0 --vignette
+python framer.py video.mp4 video_strip.png 3000x0 --vignette
 ```
 
 Because the `y` is `0`, the program defaults to a 5:1 aspect ratio, and the end result is the same image scaled up.
