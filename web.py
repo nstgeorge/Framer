@@ -72,5 +72,6 @@ if __name__ == "__main__":
         status.markdown("Done!")
         tmp_result = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
         cv2.imwrite(tmp_result.name, result_vignette)
-        st.image(tmp_result.read(), caption="Your completed image")
-        # st.download_button("Download", tmp_result.read(), file_name="framer_strip.png", mime="image/png")
+        img = tmp_result.read()
+        st.image(img, caption="Your completed image")
+        st.download_button("Download", img, file_name="framer_strip.png", mime="image/png")
