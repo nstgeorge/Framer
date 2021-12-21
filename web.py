@@ -30,7 +30,7 @@ if __name__ == "__main__":
     st.image("docs/banner.png")
     st.markdown("Generate a strip of colors based on the average color of each frame in a video.")
     st.markdown("**File**")
-    input_file = st.file_uploader("Upload the video file that generates the color strip.", type=["mp4", "mkv", "mov"])
+    input_file = st.file_uploader("Upload the video file that generates the color strip.", type=["mp4", "mkv", "mov", "m4v"])
 
     with st.expander("Help, I can't upload my movie file!"):
         st.markdown("""
@@ -64,6 +64,6 @@ if __name__ == "__main__":
             tmp_result = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
             cv2.imwrite(tmp_result.name, result_vignette)
             st.image(tmp_result.read(), caption="Your completed image")
-            st.download_button("Download", tmp_result.read(), file_name="framer_strip.png", mime="image/png")
+            # st.download_button("Download", tmp_result.read(), file_name="framer_strip.png", mime="image/png")
 
 
